@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.use(bodyParser.json()); //midleware
 app.listen(PORT, err => 
 {   if (err) {   console.error(err);   } 
