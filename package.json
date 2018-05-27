@@ -3,5 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "manojkmishra",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev babel-node src/index.js"
+  },
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "body-parser": "^1.18.3",
+    "cross-env": "^5.1.6",
+    "express": "^4.16.3"
+  }
 }
