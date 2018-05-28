@@ -18,6 +18,7 @@
     "faker": "^4.1.0",
     "graph-tools": "^0.1.2",
     "graphql": "^0.13.2",
+    "graphql-date": "^1.0.3",
     "graphql-tools": "^3.0.2",
     "mongoose": "^5.1.2"
   },
