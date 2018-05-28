@@ -1,8 +1,16 @@
 export default `
   type Tweet { _id: ID! text: String!  }
+
   type Query 
   { getTweet(_id: ID!): Tweet
     getTweets: [Tweet]  
   }
-  schema {  query: Query  }
+
+  type Mutation 
+  { createTweet(text: String!): Tweet
+  }
+
+  schema {  query: Query  
+            mutation: Mutation
+         }
 `;
