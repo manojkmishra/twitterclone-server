@@ -23,9 +23,9 @@ app.use( constants.GRAPHQL_PATH, graphqlExpress(req => ({ schema,})),);
 const graphQLServer = createServer(app);
 
 //app.listen(constants.PORT, err =>
- //mocks().then(() => {
+ mocks().then(() => {
     graphQLServer.listen(constants.PORT, err =>
     {   if (err) {   console.error(err);   } 
         else {  console.log(`App listen to port: ${constants.PORT}`);  }
     });
-//});
+});
