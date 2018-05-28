@@ -1,5 +1,8 @@
 export default `
-  type Tweet { _id: String text: String  }
-  type Query {  getTweets: [Tweet]  }
+  type Tweet { _id: ID! text: String!  }
+  type Query 
+  { getTweet(_id: ID!): Tweet
+    getTweets: [Tweet]  
+  }
   schema {  query: Query  }
 `;
