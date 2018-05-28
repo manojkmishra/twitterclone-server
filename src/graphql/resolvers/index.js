@@ -13,5 +13,6 @@ export default
      updateTweet: TweetResolvers.updateTweet,
      deleteTweet: TweetResolvers.deleteTweet,
      signup: UserResolvers.signup,
+     login: UserResolvers.login
    }
 }
