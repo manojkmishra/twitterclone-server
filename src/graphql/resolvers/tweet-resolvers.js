@@ -1,18 +1,35 @@
 import Tweet from '../../models/Tweet';
+import { requireAuth } from '../../services/auth';
 export default 
-{ getTweet:  (_, { _id }) =>  Tweet.findById(_id),  //first param empty--second is of type _id from schema
-  getTweets: () => Tweet.find({}).sort({createdAt: -1}),  //give me everything coming in from collection tweet
-  createTweet: (_, args,ctx) =>
-  { console.log('===============================')
-    console.log('CONTEXT=',ctx)
-    console.log('===============================')
-    return Tweet.create(args) //all the args from schema required
+{ getTweet: async (_, { _id }, { user }) => 
+    {   try {    console.log('=getTweet======CONTEXT.user=', user)
+                 await requireAuth(user);
+                 return Tweet.findById(_id);
+            } catch (error) {  throw error; }
+     },
+  //getTweets: () => Tweet.find({}).sort({    createdAt: -1  }),
+  getTweets: async (_, args, { user }) => 
+    {  try {console.log('=getTweets======CONTEXT.user=', user)
+            await requireAuth(user);
+            return Tweet.find({}).sort({createdAt: -1})
+          } catch (error) {  throw error; }
+    },
+  createTweet: async (_, args,{user}) =>
+  {  try {  console.log('=createTweet======CONTEXT.user=', user)
+            await requireAuth(user);
+            return Tweet.create(args) //all the args from schema required
+         } catch (error) {  throw error; }
   },
-  updateTweet: (_, { _id, ...rest }) => Tweet.findByIdAndUpdate(_id,rest, {new:true}),
-  deleteTweet: async (_, { _id }) => 
-      { try {  await Tweet.findByIdAndRemove( _id);
-              //if (!tweet) {  throw new Error('Not found!');  }
-             // else
+   updateTweet: async (_, { _id, ...rest }, { user }) =>
+   {  try {  console.log('=updateTweet======CONTEXT.user=', user)
+            await requireAuth(user);
+            return Tweet.findByIdAndUpdate(_id,rest, {new:true}) //all the args from schema required
+         } catch (error) {  throw error; }
+  },
+   deleteTweet: async (_, { _id }, { user }) => 
+      { try {  console.log('=deleteTweet======CONTEXT.user=', user)
+               await requireAuth(user);
+               await Tweet.findByIdAndRemove( _id);
                return {  message: 'Delete Success!'  }
             } catch (error) { throw error; }
       },
