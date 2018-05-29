@@ -17,7 +17,7 @@ export default
   createTweet: async (_, args,{user}) =>
   {  try {  console.log('=createTweet======CONTEXT.user=', user)
             await requireAuth(user);
-            return Tweet.create(args) //all the args from schema required
+            return Tweet.create({ ...args, user: user._id }); //Tweet.create(args) 
          } catch (error) {  throw error; }
   },
    updateTweet: async (_, { _id, ...rest }, { user }) =>
