@@ -1,9 +1,13 @@
 import jwt from 'jsonwebtoken';
 import constants from '../config/constants';
+import User from '../models/User';
 
 export async function requireAuth(user) 
 {  if (!user || !user._id) {  throw new Error('Unauthorized!');  }
- 
+   
+   const me = await User.findById(user._id);
+   if (!me) {  throw new Error('Unauthorized!');  }
+   return me; 
 }
 
 export function decodeToken(token)

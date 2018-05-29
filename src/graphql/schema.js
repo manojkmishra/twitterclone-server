@@ -4,10 +4,12 @@ export default `
   type Auth1 { token: String! }
   type Tweet { _id: ID! text: String! createdAt: Date!  updatedAt: Date!  }
   type User { _id: ID! username: String email: String! firstName: String lastName: String avatar: String createdAt: Date! updatedAt: Date!  }
-
+  type Me { _id: ID! username: String email: String! firstName: String lastName: String avatar: String createdAt: Date!  updatedAt: Date! }
+ 
   type Query 
   { getTweet(_id: ID!): Tweet
     getTweets: [Tweet]  
+    me: Me
   }
 
   type Mutation 
