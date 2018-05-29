@@ -10,6 +10,7 @@ export default `
   { getTweet(_id: ID!): Tweet
     getTweets: [Tweet]  
     me: Me
+    getUserTweets: [Tweet]
   }
 
   type Mutation 
