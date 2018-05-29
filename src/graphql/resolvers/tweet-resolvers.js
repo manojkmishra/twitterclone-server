@@ -23,7 +23,13 @@ export default
    updateTweet: async (_, { _id, ...rest }, { user }) =>
    {  try {  console.log('=updateTweet======CONTEXT.user=', user)
             await requireAuth(user);
-            return Tweet.findByIdAndUpdate(_id,rest, {new:true}) //all the args from schema required
+            // return Tweet.findByIdAndUpdate(_id,rest, {new:true}) //all the args from schema required
+            const tweet = await Tweet.findOne({ _id, user: user._id });
+            if (!tweet) { throw new Error('Not found!'); }
+            Object.entries(rest).forEach(([key, value]) => 
+                                {   tweet[key] = value; });
+
+      return tweet.save();
          } catch (error) {  throw error; }
   },
    deleteTweet: async (_, { _id }, { user }) => 
