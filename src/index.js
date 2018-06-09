@@ -7,12 +7,24 @@ import { createServer } from 'http';
 import './config/db';
 //import typeDefs from './graphql/schema';
 //import resolvers from './graphql/resolvers';
-import constants from './config/constants';
+//import constants from './config/constants';
 import mocks from './mocks';
 import middlewares from './config/middlewares';
+import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
+import { makeExecutableSchema } from 'graphql-tools';
+import typeDefs from './graphql/schema';
+import resolvers from './graphql/resolvers';
+import constants from './config/constants';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+import { execute, subscribe } from 'graphql';
 
 const app = express();
 middlewares(app);
+
+ app.use('/graphiql',graphiqlExpress({ endpointURL: constants.GRAPHQL_PATH,}), );
+ 
+ const schema = makeExecutableSchema({ typeDefs, resolvers,});
+ app.use( constants.GRAPHQL_PATH, graphqlExpress(req => ({ schema,context:{user: req.user}})),);
 
 //const schema = makeExecutableSchema({ typeDefs, resolvers,});
 //app.use(bodyParser.json()); //midleware
@@ -22,7 +34,7 @@ middlewares(app);
 const graphQLServer = createServer(app);
 
 //app.listen(constants.PORT, err =>
-// mocks().then(() => {
+ //mocks().then(() => {
     graphQLServer.listen(constants.PORT, err =>
     {   if (err) {   console.error(err);   } 
         else {  console.log(`App listen to port: ${constants.PORT}`);  }
