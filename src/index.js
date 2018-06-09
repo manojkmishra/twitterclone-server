@@ -21,7 +21,9 @@ import { execute, subscribe } from 'graphql';
 const app = express();
 middlewares(app);
 
- app.use('/graphiql',graphiqlExpress({ endpointURL: constants.GRAPHQL_PATH,}), );
+ app.use('/graphiql',graphiqlExpress({ endpointURL: constants.GRAPHQL_PATH,
+                                       subscriptionsEndpoint: `ws://localhost:${constants.PORT}${constants.SUBSCRIPTIONS_PATH}`
+                                     }), );
  
  const schema = makeExecutableSchema({ typeDefs, resolvers,});
  app.use( constants.GRAPHQL_PATH, graphqlExpress(req => ({ schema,context:{user: req.user}})),);
@@ -36,7 +38,9 @@ const graphQLServer = createServer(app);
 //app.listen(constants.PORT, err =>
  //mocks().then(() => {
     graphQLServer.listen(constants.PORT, err =>
-    {   if (err) {   console.error(err);   } 
-        else {  console.log(`App listen to port: ${constants.PORT}`);  }
+    {   if (err){   console.error(err);   } 
+        else {  new SubscriptionServer({ schema,execute,subscribe}, { server: graphQLServer, path: constants.SUBSCRIPTIONS_PATH })
+                console.log(`App listen to port: ${constants.PORT}`);  
+             }
     });
 //});
