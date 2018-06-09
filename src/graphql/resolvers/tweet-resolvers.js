@@ -1,5 +1,9 @@
 import Tweet from '../../models/Tweet';
 import { requireAuth } from '../../services/auth';
+import { pubsub } from '../../config/pubsub';
+
+const TWEET_ADDED = 'tweetAdded';
+
 export default 
 { getTweet: async (_, { _id }, { user }) => 
     {   try {    console.log('=getTweet======CONTEXT.user=', user)
@@ -22,7 +26,10 @@ export default
   createTweet: async (_, args,{user}) =>
   {  try {  console.log('=createTweet======CONTEXT.user=', user)
             await requireAuth(user);
-            return Tweet.create({ ...args, user: user._id }); //Tweet.create(args) 
+            //return Tweet.create({ ...args, user: user._id }); //Tweet.create(args) 
+            const tweet = await Tweet.create({ ...args, user: user._id });
+            pubsub.publish(TWEET_ADDED, { [TWEET_ADDED]: tweet });
+            return tweet;
          } catch (error) {  throw error; }
   },
    updateTweet: async (_, { _id, ...rest }, { user }) =>
@@ -48,4 +55,6 @@ export default
               return {   message: 'Delete Success!'  }
             } catch (error) { throw error; }
       },
+   tweetAdded: {   subscribe: () => pubsub.asyncIterator(TWEET_ADDED)     },
+  
 };
