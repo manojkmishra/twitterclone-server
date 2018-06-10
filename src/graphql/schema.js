@@ -19,6 +19,7 @@ export default `
     deleteTweet(_id: ID!): Status
     signup(email: String!, fullName: String!, password: String!, avatar: String, username: String): Auth1
     login(email: String!, password: String!): Auth1
+    favoriteTweet(_id: ID!): Tweet
   }
 
   type Subscription 

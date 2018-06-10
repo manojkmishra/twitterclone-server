@@ -1,6 +1,7 @@
 import Tweet from '../../models/Tweet';
 import { requireAuth } from '../../services/auth';
 import { pubsub } from '../../config/pubsub';
+import FavoriteTweet from '../../models/FavoriteTweet';
 
 const TWEET_ADDED = 'tweetAdded';
 
@@ -44,6 +45,7 @@ export default
       return tweet.save();
          } catch (error) {  throw error; }
   },
+
    deleteTweet: async (_, { _id }, { user }) => 
       { try {  console.log('=deleteTweet======CONTEXT.user=', user)
                await requireAuth(user);
@@ -55,6 +57,24 @@ export default
               return {   message: 'Delete Success!'  }
             } catch (error) { throw error; }
       },
+  favoriteTweet: async (_, { _id }, { user }) => //nothing coming from parent, id coming from argument, user coming from context
+      { try { await requireAuth(user);
+             const favorites = await FavoriteTweet.findOne({ userId: user._id });
+             if(favorites.tweet.some(t=>t.equals(_id)))
+             {favorites.tweet.pull(_id);
+              await favorites.save();
+              const tweet=await Tweet.findById(_id);
+              const t=tweet.toJSON();
+              return { isFavourited: false,  ...t  }
+             }
+             const tweet=await Tweet.findById(_id);
+             const t=tweet.toJSON();
+             favorites.tweet.push(_id);
+             await favorites.save();
+             return { isFavourited: false,  ...t  }
+            // return favorites.userFavoritedTweet(_id);
+            } catch (error) { throw error; }
+      },      
    tweetAdded: {   subscribe: () => pubsub.asyncIterator(TWEET_ADDED)     },
   
 };
