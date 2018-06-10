@@ -1,5 +1,6 @@
 import User from '../../models/User';
 import { requireAuth } from '../../services/auth';
+import FavoriteTweet from '../../models/FavoriteTweet';
 
 export default 
 { // signup: (_, { fullName, ...rest }) => 
@@ -7,6 +8,7 @@ export default
   {   try { const [firstName, ...lastName] = fullName.split(' ');
             //return User.create({firstName, lastName, ...rest});
             const user=await User.create({firstName, lastName, ...rest});
+            await FavoriteTweet.create({ userId: user._id });
             return { token: user.createToken(), }; //createtoken---coming from user model
           } catch (error) {   throw error;  }
   },
